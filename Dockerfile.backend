@@ -1,5 +1,5 @@
 # Backend Dockerfile (Same as frontend but with different port)
-FROM node:20-alpine AS base
+FROM node:18-alpine AS base
 
 # Install ffmpeg for video thumbnail generation
 RUN apk add --no-cache ffmpeg
