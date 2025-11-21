@@ -58,18 +58,33 @@ export default function MediaPlayer({ media, onClose }: MediaPlayerProps) {
 
           <div className="overflow-hidden rounded-2xl bg-black">
             {isVideo ? (
-              <video
-                controls
-                autoPlay
-                className="w-full"
-                style={{ aspectRatio: "16/9" }}
-                controlsList="nodownload"
-              >
-                <source src={`/api/media/stream/${media.id}`} type="video/mp4" />
-                <source src={`/api/media/stream/${media.id}`} type="video/webm" />
-                <source src={`/api/media/stream/${media.id}`} type="video/ogg" />
-                Your browser does not support the video tag.
-              </video>
+              <div className="relative">
+                <video
+                  controls
+                  autoPlay
+                  className="w-full"
+                  style={{ aspectRatio: "16/9", maxHeight: "80vh" }}
+                  controlsList="nodownload"
+                  preload="metadata"
+                  onError={(e) => {
+                    console.error("Video playback error:", e);
+                    const video = e.target as HTMLVideoElement;
+                    if (video.error) {
+                      console.error("Video error code:", video.error.code, "message:", video.error.message);
+                    }
+                  }}
+                >
+                  <source src={`/api/media/stream/${media.id}`} />
+                  Your browser does not support the video format.
+                </video>
+                <div className="absolute bottom-20 left-4 right-4 text-center text-sm text-white/80">
+                  {media.name.toLowerCase().endsWith('.avi') && (
+                    <p className="bg-black/50 px-4 py-2 rounded">
+                      ⚠️ AVI format may have limited browser support. If the video doesn't play, try downloading it.
+                    </p>
+                  )}
+                </div>
+              </div>
             ) : (
               <img
                 src={`/api/media/stream/${media.id}`}
