@@ -11,7 +11,7 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -39,7 +39,7 @@ RUN mkdir -p /media/images-videos /media/movies /media/series /media/thumbnails
 RUN chown -R nextjs:nodejs /media
 
 # Copy built application
-COPY --from=builder /app/public ./public
+RUN mkdir -p ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 

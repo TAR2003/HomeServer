@@ -7,13 +7,18 @@ export async function generateImageThumbnail(
   inputPath: string,
   outputPath: string
 ): Promise<void> {
-  await sharp(inputPath)
-    .resize(400, 300, {
-      fit: "cover",
-      position: "center",
-    })
-    .jpeg({ quality: 80 })
-    .toFile(outputPath);
+  try {
+    await sharp(inputPath)
+      .resize(400, 300, {
+        fit: "cover",
+        position: "center",
+      })
+      .jpeg({ quality: 80 })
+      .toFile(outputPath);
+  } catch (error) {
+    console.error("Error generating image thumbnail:", error);
+    throw error;
+  }
 }
 
 export async function generateVideoThumbnail(
@@ -23,13 +28,19 @@ export async function generateVideoThumbnail(
   return new Promise((resolve, reject) => {
     ffmpeg(inputPath)
       .screenshots({
-        timestamps: ["10%"],
+        timestamps: [0], // First frame (0 seconds)
         filename: path.basename(outputPath),
         folder: path.dirname(outputPath),
         size: "400x300",
       })
-      .on("end", () => resolve())
-      .on("error", (err) => reject(err));
+      .on("end", () => {
+        console.log("Video thumbnail generated successfully");
+        resolve();
+      })
+      .on("error", (err) => {
+        console.error("Error generating video thumbnail:", err);
+        reject(err);
+      });
   });
 }
 

@@ -58,20 +58,18 @@ export default function MediaPlayer({ media, onClose }: MediaPlayerProps) {
 
           <div className="overflow-hidden rounded-2xl bg-black">
             {isVideo ? (
-              <ReactPlayer
-                url={`/api/media/stream/${media.id}`}
+              <video
                 controls
-                width="100%"
-                height="auto"
+                autoPlay
+                className="w-full"
                 style={{ aspectRatio: "16/9" }}
-                config={{
-                  file: {
-                    attributes: {
-                      controlsList: "nodownload",
-                    },
-                  },
-                }}
-              />
+                controlsList="nodownload"
+              >
+                <source src={`/api/media/stream/${media.id}`} type="video/mp4" />
+                <source src={`/api/media/stream/${media.id}`} type="video/webm" />
+                <source src={`/api/media/stream/${media.id}`} type="video/ogg" />
+                Your browser does not support the video tag.
+              </video>
             ) : (
               <img
                 src={`/api/media/stream/${media.id}`}
