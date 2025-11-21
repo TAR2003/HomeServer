@@ -50,29 +50,6 @@ export default function MediaLibrary() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await fetch(`/api/media/delete/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        // Remove from local state
-        setMediaItems((prev) => prev.filter((item) => item.id !== id));
-        // Close player if this media was open
-        if (selectedMedia?.id === id) {
-          setSelectedMedia(null);
-        }
-      } else {
-        console.error("Failed to delete media");
-        alert("Failed to delete media. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error deleting media:", error);
-      alert("Error deleting media. Please try again.");
-    }
-  };
-
   const filterMedia = () => {
     let filtered = mediaItems;
 
@@ -174,7 +151,6 @@ export default function MediaLibrary() {
                 item={item}
                 viewMode={viewMode}
                 onClick={() => setSelectedMedia(item)}
-                onDelete={handleDelete}
               />
             ))}
           </AnimatePresence>

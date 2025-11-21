@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Film, Image as ImageIcon, Download, Play, Trash2 } from "lucide-react";
+import { Film, Image as ImageIcon, Download, Play } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { formatBytes, formatDate } from "@/lib/utils";
@@ -11,10 +11,9 @@ interface MediaCardProps {
   item: MediaItem;
   viewMode: "grid" | "list";
   onClick: () => void;
-  onDelete: (id: string) => void;
 }
 
-export default function MediaCard({ item, viewMode, onClick, onDelete }: MediaCardProps) {
+export default function MediaCard({ item, viewMode, onClick }: MediaCardProps) {
   const isVideo = item.type === "video" || item.type === "movie" || item.type === "series";
 
   const handleDownload = async (e: React.MouseEvent) => {
@@ -23,13 +22,6 @@ export default function MediaCard({ item, viewMode, onClick, onDelete }: MediaCa
     link.href = `/api/media/download/${item.id}`;
     link.download = item.name;
     link.click();
-  };
-
-  const handleDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (confirm(`Are you sure you want to delete "${item.name}"?`)) {
-      onDelete(item.id);
-    }
   };
 
   if (viewMode === "list") {
@@ -61,14 +53,9 @@ export default function MediaCard({ item, viewMode, onClick, onDelete }: MediaCa
                 {formatBytes(item.size)} • {formatDate(item.uploadedAt)}
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="ghost" size="icon" onClick={handleDownload}>
-                <Download className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={handleDelete} className="text-destructive hover:text-destructive">
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
+            <Button variant="ghost" size="icon" onClick={handleDownload}>
+              <Download className="h-4 w-4" />
+            </Button>
           </CardContent>
         </Card>
       </motion.div>
@@ -121,14 +108,6 @@ export default function MediaCard({ item, viewMode, onClick, onDelete }: MediaCa
                 onClick={handleDownload}
               >
                 <Download className="h-3 w-3" />
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={handleDelete}
-                className="text-destructive hover:text-destructive"
-              >
-                <Trash2 className="h-3 w-3" />
               </Button>
             </div>
           </div>
