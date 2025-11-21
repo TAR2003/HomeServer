@@ -8,12 +8,7 @@ const nextConfig = {
     unoptimized: process.env.NODE_ENV === 'development',
   },
   experimental: {
-    serverActions: {
-      bodySizeLimit: '100mb',
-    },
-    // Disable worker threads that may cause SIGILL on older CPUs
-    workerThreads: false,
-    cpus: 1,
+    serverActions: true,
   },
   // Use Terser instead of SWC for minification
   webpack: (config, { dev, isServer }) => {
