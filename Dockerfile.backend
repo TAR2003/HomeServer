@@ -1,5 +1,5 @@
 # Backend Dockerfile (Same as frontend but with different port)
-FROM node:18-slim AS base
+FROM node:16-slim AS base
 
 # Install ffmpeg for video thumbnail generation
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
@@ -22,6 +22,8 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 # Disable SWC for compatibility with older CPUs
 ENV NEXT_PRIVATE_STANDALONE 1
+# Disable Node.js optimizations that may use unsupported CPU instructions
+ENV NODE_OPTIONS="--no-turbo-inlining --no-opt"
 
 RUN npm run build
 
@@ -31,6 +33,8 @@ WORKDIR /app
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
+# Disable Node.js optimizations for runtime compatibility with older CPUs
+ENV NODE_OPTIONS="--no-turbo-inlining --no-opt"
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
