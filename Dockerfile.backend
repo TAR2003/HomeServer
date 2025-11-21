@@ -1,5 +1,5 @@
 # Backend Dockerfile (Same as frontend but with different port)
-FROM node:16-slim AS base
+FROM node:16-bullseye-slim AS base
 
 # Install ffmpeg for video thumbnail generation
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
