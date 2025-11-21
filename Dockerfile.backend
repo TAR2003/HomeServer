@@ -6,11 +6,21 @@ RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies only when needed
 FROM base AS deps
+# Install build dependencies for sharp
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
-RUN npm install
+# Install with prebuilt binaries when possible
+RUN npm config set sharp_binary_host "https://github.com/lovell/sharp-libvips/releases/download" && \
+    npm config set sharp_libvips_binary_host "https://github.com/lovell/sharp-libvips/releases/download" && \
+    npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder
