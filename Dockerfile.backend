@@ -1,12 +1,11 @@
 # Backend Dockerfile (Same as frontend but with different port)
-FROM node:18-alpine AS base
+FROM node:18-slim AS base
 
 # Install ffmpeg for video thumbnail generation
-RUN apk add --no-cache ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy package files
@@ -21,6 +20,8 @@ COPY . .
 
 # Disable telemetry during build
 ENV NEXT_TELEMETRY_DISABLED 1
+# Disable SWC for compatibility with older CPUs
+ENV NEXT_PRIVATE_STANDALONE 1
 
 RUN npm run build
 
