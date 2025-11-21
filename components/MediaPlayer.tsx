@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Download } from "lucide-react";
+import { X, Download, Trash2 } from "lucide-react";
 import ReactPlayer from "react-player";
 import { Button } from "./ui/button";
 import type { MediaItem } from "./MediaLibrary";
@@ -9,9 +9,10 @@ import type { MediaItem } from "./MediaLibrary";
 interface MediaPlayerProps {
   media: MediaItem;
   onClose: () => void;
+  onDelete?: (id: string) => void;
 }
 
-export default function MediaPlayer({ media, onClose }: MediaPlayerProps) {
+export default function MediaPlayer({ media, onClose, onDelete }: MediaPlayerProps) {
   const isVideo = media.type === "video" || media.type === "movie" || media.type === "series";
 
   const handleDownload = () => {
@@ -19,6 +20,29 @@ export default function MediaPlayer({ media, onClose }: MediaPlayerProps) {
     link.href = `/api/media/download/${media.id}`;
     link.download = media.name;
     link.click();
+  };
+
+  const handleDelete = async () => {
+    if (!confirm(`Are you sure you want to delete "${media.name}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/media/delete/${media.id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        alert("Media deleted successfully");
+        onDelete?.(media.id);
+        onClose();
+      } else {
+        throw new Error("Failed to delete media");
+      }
+    } catch (error) {
+      alert("Failed to delete media");
+      console.error("Delete error:", error);
+    }
   };
 
   return (
@@ -45,6 +69,14 @@ export default function MediaPlayer({ media, onClose }: MediaPlayerProps) {
               className="bg-black/50 backdrop-blur-sm hover:bg-black/70"
             >
               <Download className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={handleDelete}
+              className="bg-black/50 backdrop-blur-sm hover:bg-red-600"
+            >
+              <Trash2 className="h-5 w-5" />
             </Button>
             <Button
               variant="secondary"
