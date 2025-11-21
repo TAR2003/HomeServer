@@ -23,7 +23,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # Disable SWC for compatibility with older CPUs
 ENV NEXT_PRIVATE_STANDALONE 1
 # Disable Node.js optimizations that may use unsupported CPU instructions
-ENV NODE_OPTIONS="--no-turbo-inlining --no-opt"
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 RUN npm run build
 
@@ -34,7 +34,7 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 # Disable Node.js optimizations for runtime compatibility with older CPUs
-ENV NODE_OPTIONS="--no-turbo-inlining --no-opt"
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
