@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # Backend - Spring Boot
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: media-server-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - JAVA_OPTS=-Xmx1024m -Xms512m
+      - JWT_SECRET=change-this-secret-key-in-production-must-be-256-bits-long
+    volumes:
+      - ./media:/app/media
+      - backend-data:/app/data
+    networks:
+      - media-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend - Vite + React
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: media-server-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - media-network
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: media-server-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - media-network
+    restart: unless-stopped
+
+networks:
+  media-network:
+    driver: bridge
+
+volumes:
+  backend-data:
+    driver: local

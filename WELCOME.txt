@@ -1,0 +1,117 @@
+
+  ╔═══════════════════════════════════════════════════════════════╗
+  ║                                                               ║
+  ║    🏠  HOME MEDIA SERVER                                      ║
+  ║                                                               ║
+  ║    Production-Grade Media Streaming Platform                 ║
+  ║                                                               ║
+  ╠═══════════════════════════════════════════════════════════════╣
+  ║                                                               ║
+  ║    ✓  Java Spring Boot 3.2 Backend                          ║
+  ║    ✓  React 18 + TypeScript Frontend                        ║
+  ║    ✓  Docker Compose Orchestration                          ║
+  ║    ✓  Nginx Reverse Proxy                                   ║
+  ║    ✓  Video Streaming (Seekable)                            ║
+  ║    ✓  Automatic Thumbnail Generation                        ║
+  ║    ✓  Modern UI with Animations                             ║
+  ║    ✓  Dark Mode Support                                     ║
+  ║                                                               ║
+  ╠═══════════════════════════════════════════════════════════════╣
+  ║                                                               ║
+  ║    🚀  QUICK START:                                          ║
+  ║                                                               ║
+  ║    Windows:  start.bat                                       ║
+  ║    Mac/Linux: ./start.sh                                     ║
+  ║                                                               ║
+  ║    Then open: http://localhost                               ║
+  ║                                                               ║
+  ╠═══════════════════════════════════════════════════════════════╣
+  ║                                                               ║
+  ║    📚  DOCUMENTATION:                                        ║
+  ║                                                               ║
+  ║    • README.md         - Full documentation                  ║
+  ║    • QUICKSTART.md     - 5-minute setup guide               ║
+  ║    • API.md            - Complete API reference             ║
+  ║    • ARCHITECTURE.md   - System architecture                ║
+  ║    • PROJECT_SUMMARY.md - Project overview                  ║
+  ║                                                               ║
+  ╠═══════════════════════════════════════════════════════════════╣
+  ║                                                               ║
+  ║    🎯  FEATURES:                                             ║
+  ║                                                               ║
+  ║    ▸ Upload files up to 10GB                                ║
+  ║    ▸ Stream videos with seek support                        ║
+  ║    ▸ Auto-generate thumbnails (FFmpeg)                      ║
+  ║    ▸ Search and filter media                                ║
+  ║    ▸ Organized by category                                  ║
+  ║    ▸ Responsive mobile design                               ║
+  ║    ▸ Real-time WebSocket updates                            ║
+  ║    ▸ RESTful API with 8+ endpoints                          ║
+  ║                                                               ║
+  ╠═══════════════════════════════════════════════════════════════╣
+  ║                                                               ║
+  ║    🛠️  COMMANDS:                                             ║
+  ║                                                               ║
+  ║    Start:       start.bat / ./start.sh                       ║
+  ║    Stop:        stop.bat / ./stop.sh                         ║
+  ║    Clean:       clean-start.bat / ./clean-start.sh           ║
+  ║    Logs:        logs.bat / ./logs.sh                         ║
+  ║    Manual:      docker-compose up --build                    ║
+  ║                                                               ║
+  ╠═══════════════════════════════════════════════════════════════╣
+  ║                                                               ║
+  ║    📊  TECH STACK:                                           ║
+  ║                                                               ║
+  ║    Backend:   Java 17, Spring Boot 3.2, H2 Database         ║
+  ║    Frontend:  React 18, TypeScript, Vite, TailwindCSS       ║
+  ║    DevOps:    Docker, Nginx, FFmpeg                          ║
+  ║    UI/UX:     Framer Motion, ShadCN, Lucide Icons           ║
+  ║                                                               ║
+  ╠═══════════════════════════════════════════════════════════════╣
+  ║                                                               ║
+  ║    🌐  ACCESS POINTS:                                        ║
+  ║                                                               ║
+  ║    Application:    http://localhost                          ║
+  ║    API:            http://localhost/api                      ║
+  ║    Health Check:   http://localhost/api/health               ║
+  ║                                                               ║
+  ╠═══════════════════════════════════════════════════════════════╣
+  ║                                                               ║
+  ║    💡  TIPS:                                                 ║
+  ║                                                               ║
+  ║    • First run takes 5-10 minutes to build                   ║
+  ║    • Subsequent starts are much faster                       ║
+  ║    • Use SSD storage for best performance                    ║
+  ║    • Check logs if something goes wrong                      ║
+  ║    • Port 80 must be available (or change it)                ║
+  ║                                                               ║
+  ╠═══════════════════════════════════════════════════════════════╣
+  ║                                                               ║
+  ║    🎬  Ready to stream your media collection!                ║
+  ║                                                               ║
+  ║    Built with ❤️  using Spring Boot, React & Docker         ║
+  ║                                                               ║
+  ╚═══════════════════════════════════════════════════════════════╝
+
+
+  Project Structure:
+  ==================
+
+  HomeServer/
+  ├── 📁 backend/           ← Spring Boot API Server
+  ├── 📁 frontend/          ← React TypeScript App
+  ├── 📁 nginx/             ← Reverse Proxy Config
+  ├── 📁 media/             ← Your Media Files
+  │   ├── images-videos/
+  │   ├── movies/
+  │   ├── series/
+  │   └── thumbnails/
+  ├── 📄 docker-compose.yml ← Orchestration
+  ├── 📄 README.md          ← Main Documentation
+  ├── 📄 QUICKSTART.md      ← Quick Start Guide
+  ├── 📄 API.md             ← API Documentation
+  ├── 📄 ARCHITECTURE.md    ← System Architecture
+  └── 📄 PROJECT_SUMMARY.md ← Project Overview
+
+  
+  Happy Streaming! 🎉

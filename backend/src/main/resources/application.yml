@@ -1,0 +1,72 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  max-http-header-size: 64KB
+
+spring:
+  application:
+    name: home-media-server
+  
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10GB
+      max-request-size: 10GB
+      file-size-threshold: 10MB
+  
+  datasource:
+    url: jdbc:h2:file:./data/mediaserver
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# Application Configuration
+app:
+  media:
+    base-path: /app/media
+    folders:
+      - images-videos
+      - movies
+      - series
+    thumbnail-path: /app/media/thumbnails
+    thumbnail-width: 320
+    thumbnail-height: 240
+  
+  security:
+    jwt:
+      secret: ${JWT_SECRET:your-secret-key-change-this-in-production-minimum-256-bits-long}
+      expiration: 86400000 # 24 hours
+  
+  ffmpeg:
+    path: /usr/bin/ffmpeg
+    thumbnail-time: 00:00:01
+
+# CORS Configuration
+cors:
+  allowed-origins: "*"
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+  max-age: 3600
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.homeserver: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
