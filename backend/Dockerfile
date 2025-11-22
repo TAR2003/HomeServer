@@ -25,7 +25,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Create media directories
-RUN mkdir -p /app/media/images-videos /app/media/movies /app/media/series /app/media/thumbnails
+RUN mkdir -p /app/media/images /app/media/videos /app/media/movies /app/media/series /app/media/thumbnails
 
 # Expose port
 EXPOSE 8080

@@ -38,7 +38,7 @@ spring:
 app:
   media:
     base-path: /app/media
-    folders: images-videos,movies,series
+    folders: images,videos,movies,series
     thumbnail-path: /app/media/thumbnails
     thumbnail-width: 320
     thumbnail-height: 240

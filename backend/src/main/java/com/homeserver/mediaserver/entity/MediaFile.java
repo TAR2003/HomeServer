@@ -33,7 +33,7 @@ public class MediaFile {
     private String thumbnailPath;
     
     @Column(nullable = false)
-    private String category; // images-videos, movies, series
+    private String category; // images, videos, movies, series
     
     @Column(nullable = false)
     private LocalDateTime uploadedAt;

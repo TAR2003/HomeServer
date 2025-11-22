@@ -16,26 +16,55 @@ interface UploadingFile {
   progress: number;
   status: 'uploading' | 'success' | 'error';
   message?: string;
+  uploadedBytes: number;
+  totalBytes: number;
+  uploadSpeed: number;
+  startTime: number;
 }
 
 export const UploadArea: React.FC<UploadAreaProps> = ({ category, onUploadComplete }) => {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
+
+  const formatBytes = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  };
+
+  const formatSpeed = (bytesPerSecond: number): string => {
+    return formatBytes(bytesPerSecond) + '/s';
+  };
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const newFiles = acceptedFiles.map(file => ({
       file,
       progress: 0,
       status: 'uploading' as const,
+      uploadedBytes: 0,
+      totalBytes: file.size,
+      uploadSpeed: 0,
+      startTime: Date.now(),
     }));
 
     setUploadingFiles(prev => [...prev, ...newFiles]);
 
     for (const fileObj of newFiles) {
       try {
-        await mediaApi.uploadFile(fileObj.file, category, (progress) => {
+        await mediaApi.uploadFile(fileObj.file, category, (progress, loaded, total) => {
+          const elapsedTime = (Date.now() - fileObj.startTime) / 1000; // in seconds
+          const speed = elapsedTime > 0 ? loaded / elapsedTime : 0;
+          
           setUploadingFiles(prev =>
             prev.map(f =>
-              f.file === fileObj.file ? { ...f, progress } : f
+              f.file === fileObj.file ? { 
+                ...f, 
+                progress, 
+                uploadedBytes: loaded,
+                totalBytes: total,
+                uploadSpeed: speed
+              } : f
             )
           );
         });
@@ -135,13 +164,23 @@ export const UploadArea: React.FC<UploadAreaProps> = ({ category, onUploadComple
                     )}
                   </div>
                   {fileObj.status === 'uploading' && (
-                    <div className="w-full bg-secondary rounded-full h-2">
-                      <motion.div
-                        className="bg-primary h-2 rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${fileObj.progress}%` }}
-                      />
-                    </div>
+                    <>
+                      <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                        <span>
+                          {formatBytes(fileObj.uploadedBytes)} / {formatBytes(fileObj.totalBytes)}
+                        </span>
+                        <span>
+                          {formatSpeed(fileObj.uploadSpeed)}
+                        </span>
+                      </div>
+                      <div className="w-full bg-secondary rounded-full h-2">
+                        <motion.div
+                          className="bg-primary h-2 rounded-full"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${fileObj.progress}%` }}
+                        />
+                      </div>
+                    </>
                   )}
                   {fileObj.status === 'error' && (
                     <p className="text-sm text-red-500">{fileObj.message}</p>

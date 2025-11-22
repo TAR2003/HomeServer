@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Film, Image as ImageIcon, Tv, Search, Upload as UploadIcon, Moon, Sun, ArrowLeft, Home } from 'lucide-react';
+import { Film, Image as ImageIcon, Tv, Search, Upload as UploadIcon, Moon, Sun, ArrowLeft, Home, Video } from 'lucide-react';
 import { MediaFile, mediaApi } from './lib/api';
 import { MediaGrid } from './components/MediaGrid';
 import { UploadArea } from './components/UploadArea';
@@ -10,7 +10,8 @@ import { Button } from './components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/Card';
 
 const categories = [
-  { id: 'images-videos', name: 'Images & Videos', icon: ImageIcon },
+  { id: 'images', name: 'Images', icon: ImageIcon },
+  { id: 'videos', name: 'Videos', icon: Video },
   { id: 'movies', name: 'Movies', icon: Film },
   { id: 'series', name: 'TV Series', icon: Tv },
 ];
@@ -252,7 +253,7 @@ function CategoryPage({ categoryId }: { categoryId: string }) {
 }
 
 function UploadPage() {
-  const [selectedCategory, setSelectedCategory] = useState('images-videos');
+  const [selectedCategory, setSelectedCategory] = useState('images');
   const navigate = useNavigate();
 
   const handleUploadComplete = () => {
@@ -267,13 +268,35 @@ function UploadPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Link to="/">
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Library
+              <h1 className="text-2xl font-bold">🏠 Home Media Server</h1>
+            </Link>
+          </div>
+          
+          <nav className="flex gap-4 mt-4">
+            <Link to="/">
+              <Button variant="ghost">
+                <Home className="h-4 w-4 mr-2" />
+                All Files
               </Button>
             </Link>
-            <h1 className="text-2xl font-bold">Upload Media Files</h1>
-          </div>
+            {categories.map((cat) => {
+              const CatIcon = cat.icon;
+              return (
+                <Link key={cat.id} to={`/category/${cat.id}`}>
+                  <Button variant="ghost">
+                    <CatIcon className="h-4 w-4 mr-2" />
+                    {cat.name}
+                  </Button>
+                </Link>
+              );
+            })}
+            <Link to="/upload">
+              <Button variant="primary">
+                <UploadIcon className="h-4 w-4 mr-2" />
+                Upload
+              </Button>
+            </Link>
+          </nav>
         </div>
       </header>
       
@@ -325,8 +348,8 @@ function App() {
 }
 
 function CategoryPageWrapper() {
-  const categoryId = window.location.pathname.split('/').pop() || '';
-  return <CategoryPage categoryId={categoryId} />;
+  const { categoryId } = useParams<{ categoryId: string }>();
+  return <CategoryPage categoryId={categoryId || ''} />;
 }
 
 export default App;

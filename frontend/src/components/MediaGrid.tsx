@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Play, Image as ImageIcon, FileVideo, Trash2 } from 'lucide-react';
+import { Download, Play, Image as ImageIcon, FileVideo, Trash2, Film, Tv, Video } from 'lucide-react';
 import { MediaFile, mediaApi } from '@/lib/api';
 import { Button } from './ui/Button';
 import { Card, CardContent } from './ui/Card';
@@ -14,6 +14,21 @@ interface MediaGridProps {
 
 export const MediaGrid: React.FC<MediaGridProps> = ({ files, onPlayVideo, onDelete }) => {
   const [deleting, setDeleting] = useState<number | null>(null);
+  
+  const getCategoryInfo = (category: string) => {
+    switch (category) {
+      case 'images':
+        return { name: 'Images', icon: ImageIcon, color: 'bg-blue-500' };
+      case 'videos':
+        return { name: 'Videos', icon: Video, color: 'bg-purple-500' };
+      case 'movies':
+        return { name: 'Movies', icon: Film, color: 'bg-red-500' };
+      case 'series':
+        return { name: 'TV Series', icon: Tv, color: 'bg-green-500' };
+      default:
+        return { name: category, icon: FileVideo, color: 'bg-gray-500' };
+    }
+  };
   const handleDownload = (file: MediaFile) => {
     window.open(mediaApi.getDownloadUrl(file.filePath), '_blank');
   };
@@ -46,7 +61,11 @@ export const MediaGrid: React.FC<MediaGridProps> = ({ files, onPlayVideo, onDele
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {files.map((file, index) => (
+      {files.map((file, index) => {
+        const categoryInfo = getCategoryInfo(file.category);
+        const CategoryIcon = categoryInfo.icon;
+        
+        return (
         <motion.div
           key={file.id}
           initial={{ opacity: 0, y: 20 }}
@@ -55,6 +74,12 @@ export const MediaGrid: React.FC<MediaGridProps> = ({ files, onPlayVideo, onDele
         >
           <Card className="overflow-hidden hover:shadow-lg transition-shadow">
             <div className="relative aspect-video bg-muted">
+              {/* Category Badge */}
+              <div className={`absolute top-2 right-2 ${categoryInfo.color} text-white px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 z-10`}>
+                <CategoryIcon className="h-3 w-3" />
+                {categoryInfo.name}
+              </div>
+              
               {file.thumbnailPath ? (
                 <img
                   src={getThumbnail(file)}
@@ -142,7 +167,7 @@ export const MediaGrid: React.FC<MediaGridProps> = ({ files, onPlayVideo, onDele
             </CardContent>
           </Card>
         </motion.div>
-      ))}
+      );})}
     </div>
   );
 };

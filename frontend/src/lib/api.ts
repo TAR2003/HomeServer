@@ -29,7 +29,7 @@ const api = axios.create({
 
 export const mediaApi = {
   // Upload file
-  uploadFile: async (file: File, category: string, onProgress?: (percentage: number) => void): Promise<UploadResponse> => {
+  uploadFile: async (file: File, category: string, onProgress?: (percentage: number, loaded: number, total: number) => void): Promise<UploadResponse> => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('category', category);
@@ -41,7 +41,7 @@ export const mediaApi = {
       onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
           const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          onProgress(percentage);
+          onProgress(percentage, progressEvent.loaded, progressEvent.total);
         }
       },
     });
