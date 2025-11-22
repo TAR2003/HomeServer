@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Film, Image as ImageIcon, Tv, Search, Upload as UploadIcon, Moon, Sun } from 'lucide-react';
@@ -267,7 +267,6 @@ function App() {
 }
 
 function CategoryPageWrapper() {
-  const navigate = useNavigate();
   const categoryId = window.location.pathname.split('/').pop() || '';
   return <CategoryPage categoryId={categoryId} />;
 }

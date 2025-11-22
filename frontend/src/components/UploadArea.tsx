@@ -75,10 +75,12 @@ export const UploadArea: React.FC<UploadAreaProps> = ({ category, onUploadComple
     setUploadingFiles(prev => prev.filter(f => f.file !== file));
   };
 
+  const dropzoneProps = getRootProps();
+  
   return (
     <div className="w-full space-y-4">
       <motion.div
-        {...getRootProps()}
+        onClick={dropzoneProps.onClick}
         className={cn(
           'border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors',
           isDragActive
