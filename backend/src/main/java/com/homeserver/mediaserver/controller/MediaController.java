@@ -176,6 +176,22 @@ public class MediaController {
         }
     }
 
+    @DeleteMapping("/files/{id}")
+    public ResponseEntity<Map<String, String>> deleteFile(@PathVariable Long id) {
+        try {
+            boolean deleted = mediaService.deleteFile(id);
+            if (deleted) {
+                return ResponseEntity.ok(Map.of("success", "true", "message", "File deleted successfully"));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            log.error("Error deleting file", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", "false", "message", "Error deleting file: " + e.getMessage()));
+        }
+    }
+
     @GetMapping("/health")
     public ResponseEntity<Map<String, String>> health() {
         return ResponseEntity.ok(Map.of("status", "UP", "service", "Home Media Server"));

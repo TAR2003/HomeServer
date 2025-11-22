@@ -87,4 +87,10 @@ export const mediaApi = {
   getThumbnailUrl: (path: string): string => {
     return `${API_BASE_URL}/thumbnail?path=${encodeURIComponent(path)}`;
   },
+
+  // Delete file
+  deleteFile: async (id: number): Promise<{ success: string; message: string }> => {
+    const response = await api.delete<{ success: string; message: string }>(`/files/${id}`);
+    return response.data;
+  },
 };

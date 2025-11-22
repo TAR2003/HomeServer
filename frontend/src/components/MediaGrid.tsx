@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Play, Image as ImageIcon, FileVideo } from 'lucide-react';
+import { Download, Play, Image as ImageIcon, FileVideo, Trash2 } from 'lucide-react';
 import { MediaFile, mediaApi } from '@/lib/api';
 import { Button } from './ui/Button';
 import { Card, CardContent } from './ui/Card';
@@ -9,11 +9,32 @@ import { formatFileSize, formatDate } from '@/lib/utils';
 interface MediaGridProps {
   files: MediaFile[];
   onPlayVideo?: (file: MediaFile) => void;
+  onDelete?: () => void;
 }
 
-export const MediaGrid: React.FC<MediaGridProps> = ({ files, onPlayVideo }) => {
+export const MediaGrid: React.FC<MediaGridProps> = ({ files, onPlayVideo, onDelete }) => {
+  const [deleting, setDeleting] = useState<number | null>(null);
   const handleDownload = (file: MediaFile) => {
     window.open(mediaApi.getDownloadUrl(file.filePath), '_blank');
+  };
+
+  const handleDelete = async (file: MediaFile) => {
+    if (!confirm(`Are you sure you want to delete "${file.fileName}"?`)) {
+      return;
+    }
+    
+    try {
+      setDeleting(file.id);
+      await mediaApi.deleteFile(file.id);
+      if (onDelete) {
+        onDelete();
+      }
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      alert('Failed to delete file');
+    } finally {
+      setDeleting(null);
+    }
   };
 
   const getThumbnail = (file: MediaFile) => {
@@ -80,6 +101,7 @@ export const MediaGrid: React.FC<MediaGridProps> = ({ files, onPlayVideo }) => {
                     size="sm"
                     className="flex-1"
                     onClick={() => onPlayVideo && onPlayVideo(file)}
+                    disabled={deleting === file.id}
                   >
                     <Play className="h-4 w-4 mr-1" />
                     Play
@@ -90,6 +112,7 @@ export const MediaGrid: React.FC<MediaGridProps> = ({ files, onPlayVideo }) => {
                     variant="outline"
                     className="flex-1"
                     onClick={() => window.open(mediaApi.getStreamUrl(file.filePath), '_blank')}
+                    disabled={deleting === file.id}
                   >
                     <ImageIcon className="h-4 w-4 mr-1" />
                     View
@@ -99,8 +122,21 @@ export const MediaGrid: React.FC<MediaGridProps> = ({ files, onPlayVideo }) => {
                   size="sm"
                   variant="outline"
                   onClick={() => handleDownload(file)}
+                  disabled={deleting === file.id}
                 >
                   <Download className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleDelete(file)}
+                  disabled={deleting === file.id}
+                >
+                  {deleting === file.id ? (
+                    <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+                  ) : (
+                    <Trash2 className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
             </CardContent>

@@ -189,4 +189,34 @@ public class MediaService {
             return null;
         }
     }
+
+    public boolean deleteFile(Long id) {
+        try {
+            Optional<MediaFile> mediaFileOpt = mediaFileRepository.findById(id);
+            if (mediaFileOpt.isEmpty()) {
+                return false;
+            }
+            
+            MediaFile mediaFile = mediaFileOpt.get();
+            
+            // Delete physical file
+            Path filePath = Paths.get(mediaFile.getFilePath());
+            Files.deleteIfExists(filePath);
+            
+            // Delete thumbnail if exists
+            if (mediaFile.getThumbnailPath() != null) {
+                Path thumbnailPath = Paths.get(mediaFile.getThumbnailPath());
+                Files.deleteIfExists(thumbnailPath);
+            }
+            
+            // Delete from database
+            mediaFileRepository.deleteById(id);
+            
+            log.info("Deleted file: {} (ID: {})", mediaFile.getFileName(), id);
+            return true;
+        } catch (Exception e) {
+            log.error("Error deleting file with ID: {}", id, e);
+            return false;
+        }
+    }
 }
